@@ -25,7 +25,7 @@ function Dashboard({ user }) {
       ]);
 
       setKpi(kpiRes.data);
-      setRecentTickets(ticketsRes.data);
+      setRecentTickets(ticketsRes.data.tickets || []);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
