@@ -6,6 +6,9 @@ import TicketList from './components/TicketList';
 import TicketDetail from './components/TicketDetail';
 import Analytics from './components/Analytics';
 import SupportStats from './components/SupportStats';
+import Settings from './components/Settings';
+import UserManagement from './components/UserManagement';
+import LiveChat from './components/LiveChat';
 import Sidebar from './components/Sidebar';
 import './App.css';
 
