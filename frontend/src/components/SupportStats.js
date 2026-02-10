@@ -18,7 +18,7 @@ function SupportStats({ user }) {
       const response = await axios.get(`${API_URL}/api/support_stats`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setStats(response.data);
+      setStats(response.data.stats || []);
     } catch (error) {
       console.error('Error fetching support stats:', error);
     } finally {
