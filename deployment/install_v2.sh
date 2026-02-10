@@ -186,7 +186,7 @@ pip install -q \
     motor==3.7.1 \
     pymongo==4.11.2 \
     bcrypt==4.3.0 \
-    pyjwt==2.10.3 \
+    pyjwt==2.11.0 \
     python-jose[cryptography]==3.3.0 \
     python-dotenv==1.0.1 \
     discord.py==2.4.0 \
