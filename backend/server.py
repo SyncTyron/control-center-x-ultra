@@ -537,6 +537,42 @@ async def get_type_dist(user: dict = Depends(get_current_user)):
 async def health():
     return {"status": "ok", "service": "Control Center X Ultra"}
 
+# --- Settings Routes ---
+class SettingsUpdate(BaseModel):
+    sla_first_response: Optional[int] = None
+    sla_resolution: Optional[int] = None
+    auto_close_hours: Optional[int] = None
+    max_tickets_per_user: Optional[int] = None
+    notification_email: Optional[str] = None
+    discord_webhook: Optional[str] = None
+
+@api_router.get("/settings")
+async def get_settings(user: dict = Depends(get_current_user)):
+    settings = await db.settings.find_one({"id": "global"}, {"_id": 0})
+    if not settings:
+        settings = {
+            "id": "global",
+            "sla_first_response": 30,
+            "sla_resolution": 240,
+            "auto_close_hours": 48,
+            "max_tickets_per_user": 3,
+            "notification_email": "",
+            "discord_webhook": ""
+        }
+    return settings
+
+@api_router.put("/settings")
+async def update_settings(update: SettingsUpdate, user: dict = Depends(require_admin)):
+    update_dict = {k: v for k, v in update.dict().items() if v is not None}
+    if update_dict:
+        await db.settings.update_one(
+            {"id": "global"},
+            {"$set": update_dict},
+            upsert=True
+        )
+        await audit_log("settings_update", user["username"], details=json.dumps(update_dict))
+    return {"status": "updated"}
+
 # --- PDF Download ---
 @api_router.get("/docs/download")
 async def download_docs():
