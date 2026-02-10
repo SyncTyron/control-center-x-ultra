@@ -9,7 +9,10 @@ function Sidebar({ user, onLogout }) {
     { path: '/', icon: 'fas fa-th-large', label: 'Dashboard' },
     { path: '/tickets', icon: 'fas fa-ticket-alt', label: 'Tickets' },
     { path: '/analytics', icon: 'fas fa-chart-line', label: 'Analytics' },
-    { path: '/support', icon: 'fas fa-users', label: 'Support Stats' }
+    { path: '/support', icon: 'fas fa-users', label: 'Support Stats' },
+    { path: '/live', icon: 'fas fa-comments', label: 'Live Chat' },
+    { path: '/users', icon: 'fas fa-user-cog', label: 'Benutzerverwaltung' },
+    { path: '/settings', icon: 'fas fa-cog', label: 'Einstellungen' }
   ];
 
   return (
