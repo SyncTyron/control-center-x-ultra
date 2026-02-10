@@ -67,7 +67,7 @@ function TicketDetail({ user }) {
         <button onClick={() => navigate('/tickets')} className="btn btn-secondary">
           <i className="fas fa-arrow-left"></i> Zurück
         </button>
-        <h1>Ticket #{String(ticket.ticketId).padStart(4, '0')}</h1>
+        <h1>Ticket #{ticket.id ? ticket.id.substring(0, 8) : 'N/A'}</h1>
       </div>
 
       <div className="detail-grid">
@@ -76,15 +76,15 @@ function TicketDetail({ user }) {
             <div className="ticket-info-header">
               <h2>{ticket.subject}</h2>
               <div className="ticket-badges">
-                <span className={`badge badge-${ticket.priority}`}>{ticket.priority.toUpperCase()}</span>
-                <span className={`badge badge-${ticket.status}`}>{ticket.status.toUpperCase()}</span>
-                {ticket.escalated && <span className="badge badge-critical">ESKALIERT</span>}
+                <span className={`badge badge-${ticket.priority || 'medium'}`}>{(ticket.priority || 'medium').toUpperCase()}</span>
+                <span className={`badge badge-${ticket.status || 'open'}`}>{(ticket.status || 'open').toUpperCase()}</span>
+                {ticket.escalation_flag && <span className="badge badge-critical">ESKALIERT</span>}
               </div>
             </div>
 
             <div className="ticket-description">
               <h3>Beschreibung</h3>
-              <p>{ticket.description}</p>
+              <p>{ticket.description || 'Keine Beschreibung'}</p>
             </div>
 
             <div className="ticket-metadata">
@@ -94,32 +94,28 @@ function TicketDetail({ user }) {
               </div>
               <div className="meta-item">
                 <i className="fas fa-globe"></i>
-                <span>Sprache: {ticket.lang.toUpperCase()}</span>
+                <span>Sprache: {(ticket.lang || 'de').toUpperCase()}</span>
               </div>
               <div className="meta-item">
                 <i className="fas fa-user"></i>
-                <span>Ersteller: {ticket.userName}</span>
+                <span>Ersteller: {ticket.username}</span>
               </div>
               <div className="meta-item">
                 <i className="fas fa-calendar"></i>
-                <span>Erstellt: {new Date(ticket.createdAt).toLocaleString('de-DE')}</span>
+                <span>Erstellt: {ticket.created_at ? new Date(ticket.created_at).toLocaleString('de-DE') : 'N/A'}</span>
               </div>
             </div>
           </div>
 
           <div className="card notes-section">
-            <h3>Notizen ({ticket.notes?.length || 0})</h3>
+            <h3>Interne Notizen</h3>
             
-            <div className="notes-list">
-              {ticket.notes?.map((note, index) => (
-                <div key={index} className="note-item">
-                  <div className="note-header">
-                    <strong>{note.authorName || note.author}</strong>
-                    <span className="note-date">{new Date(note.timestamp).toLocaleString('de-DE')}</span>
-                  </div>
-                  <p>{note.content}</p>
-                </div>
-              ))}
+            <div className="notes-content">
+              {ticket.notes ? (
+                <p className="current-notes">{ticket.notes}</p>
+              ) : (
+                <p className="no-notes">Keine Notizen vorhanden</p>
+              )}
             </div>
 
             {user.role !== 'viewer' && (
@@ -127,12 +123,12 @@ function TicketDetail({ user }) {
                 <textarea
                   value={newNote}
                   onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Neue Notiz hinzufügen..."
+                  placeholder="Notiz hinzufügen oder aktualisieren..."
                   rows="3"
                   data-testid="note-input"
                 />
                 <button onClick={addNote} className="btn btn-primary" disabled={updating}>
-                  <i className="fas fa-plus"></i> Notiz hinzufügen
+                  <i className="fas fa-save"></i> Notiz speichern
                 </button>
               </div>
             )}
@@ -147,7 +143,7 @@ function TicketDetail({ user }) {
               <div className="action-group">
                 <label>Status ändern</label>
                 <select
-                  value={ticket.status}
+                  value={ticket.status || 'open'}
                   onChange={(e) => updateTicket({ status: e.target.value })}
                   disabled={updating}
                   data-testid="status-select"
@@ -161,7 +157,7 @@ function TicketDetail({ user }) {
               <div className="action-group">
                 <label>Priorität ändern</label>
                 <select
-                  value={ticket.priority}
+                  value={ticket.priority || 'medium'}
                   onChange={(e) => updateTicket({ priority: e.target.value })}
                   disabled={updating}
                   data-testid="priority-select"
@@ -182,33 +178,33 @@ function TicketDetail({ user }) {
                 <i className="fas fa-plus-circle"></i>
                 <div>
                   <strong>Erstellt</strong>
-                  <span>{new Date(ticket.createdAt).toLocaleString('de-DE')}</span>
+                  <span>{ticket.created_at ? new Date(ticket.created_at).toLocaleString('de-DE') : 'N/A'}</span>
                 </div>
               </div>
-              {ticket.claimedAt && (
+              {ticket.claimed_at && (
                 <div className="timeline-item">
                   <i className="fas fa-hand-paper"></i>
                   <div>
-                    <strong>Claimed</strong>
-                    <span>{new Date(ticket.claimedAt).toLocaleString('de-DE')}</span>
+                    <strong>Übernommen von {ticket.claimed_by}</strong>
+                    <span>{new Date(ticket.claimed_at).toLocaleString('de-DE')}</span>
                   </div>
                 </div>
               )}
-              {ticket.firstResponseAt && (
+              {ticket.first_response_at && (
                 <div className="timeline-item">
                   <i className="fas fa-reply"></i>
                   <div>
                     <strong>Erste Antwort</strong>
-                    <span>{new Date(ticket.firstResponseAt).toLocaleString('de-DE')}</span>
+                    <span>{new Date(ticket.first_response_at).toLocaleString('de-DE')}</span>
                   </div>
                 </div>
               )}
-              {ticket.closedAt && (
+              {ticket.closed_at && (
                 <div className="timeline-item">
                   <i className="fas fa-check-circle"></i>
                   <div>
-                    <strong>Geschlossen</strong>
-                    <span>{new Date(ticket.closedAt).toLocaleString('de-DE')}</span>
+                    <strong>Geschlossen von {ticket.closed_by}</strong>
+                    <span>{new Date(ticket.closed_at).toLocaleString('de-DE')}</span>
                   </div>
                 </div>
               )}
