@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Control Center X Ultra - Installations- &amp; Benutzeranleitung</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --card: #111118;
+    --border: #1e1e2a;
+    --text: #e4e4ed;
+    --muted: #8888a0;
+    --primary: #3b82f6;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --code-bg: #08080d;
+    --code-text: #6ee7b7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 10pt;
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  @page {
+    size: A4;
+    margin: 18mm 16mm 20mm 16mm;
+  }
+
+  @media print {
+    body { background: var(--bg); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+  }
+
+  /* Cover Page */
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    page-break-after: always;
+    padding: 40px;
+  }
+  .cover-logo {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--primary), #6366f1);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 30px;
+    font-size: 36px; font-weight: 800; color: white;
+    font-family: 'Inter', sans-serif;
+  }
+  .cover h1 {
+    font-size: 28pt;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    color: white;
+  }
+  .cover h2 {
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+  .cover-meta {
+    font-size: 9pt;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .cover-line {
+    width: 60px; height: 3px;
+    background: var(--primary);
+    margin: 20px auto;
+    border-radius: 2px;
+  }
+
+  /* TOC */
+  .toc { page-break-after: always; padding: 20px 0; }
+  .toc h2 { font-size: 16pt; margin-bottom: 20px; color: white; }
+  .toc-section { font-size: 10pt; font-weight: 700; color: var(--primary); margin-top: 18px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; font-family: 'JetBrains Mono', monospace; font-size: 8pt; }
+  .toc ul { list-style: none; }
+  .toc li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .toc li a { color: var(--text); text-decoration: none; display: flex; justify-content: space-between; }
+  .toc li a span.num { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 9pt; }
+
+  /* Content */
+  .content { padding: 0; }
+
+  h2.section-title {
+    font-size: 15pt;
+    font-weight: 700;
+    color: white;
+    margin-top: 35px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary);
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 11pt;
+    font-weight: 600;
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  h4 {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+
+  p { margin-bottom: 8px; }
+  strong { color: white; font-weight: 600; }
+
+  /* Code blocks */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin: 10px 0 14px 0;
+    overflow: hidden;
+    page-break-inside: avoid;
+  }
+  .code-title {
+    background: #16161f;
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-content {
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    line-height: 1.6;
+    color: var(--code-text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .code-content .comment { color: #6b7280; }
+
+  /* Info boxes */
+  .info-box {
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .info-box .icon { font-size: 14pt; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+  .info-box.info { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25); color: #93c5fd; }
+  .info-box.warning { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: #fcd34d; }
+  .info-box.danger { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+  .info-box.success { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; }
+
+  /* Check list */
+  .checklist { list-style: none; margin: 8px 0; }
+  .checklist li { padding: 3px 0; display: flex; align-items: flex-start; gap: 8px; }
+  .checklist li::before { content: ""; display: none; }
+  .check { color: var(--green); font-size: 12pt; line-height: 1; flex-shrink: 0; }
+  .lock { color: var(--muted); font-size: 10pt; line-height: 1; flex-shrink: 0; }
+
+  /* Steps */
+  .step { display: flex; align-items: flex-start; gap: 10px; margin: 6px 0; }
+  .step-num {
+    width: 22px; height: 22px;
+    background: rgba(59,130,246,0.15);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9pt; font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Role cards */
+  .role-card {
+    border-radius: 6px;
+    padding: 14px;
+    margin: 10px 0;
+    page-break-inside: avoid;
+  }
+  .role-card.admin { background: var(--card); border: 1px solid rgba(239,68,68,0.2); }
+  .role-card.support { background: var(--card); border: 1px solid rgba(59,130,246,0.2); }
+  .role-card.viewer { background: var(--card); border: 1px solid var(--border); }
+  .role-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .role-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .role-icon.admin { background: rgba(239,68,68,0.1); }
+  .role-icon.support { background: rgba(59,130,246,0.1); }
+  .role-icon.viewer { background: rgba(136,136,160,0.1); }
+  .role-name { font-size: 11pt; font-weight: 700; color: white; }
+  .role-label { font-size: 8pt; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+  .role-label.admin { color: var(--red); }
+  .role-label.support { color: var(--primary); }
+  .role-label.viewer { color: var(--muted); }
+  .perms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; font-size: 9pt; }
+  .perm { display: flex; align-items: center; gap: 5px; padding: 2px 0; }
+  .perm.denied { color: rgba(136,136,160,0.4); }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 9pt;
+  }
+  th { background: #16161f; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px; text-align: left; padding: 8px 10px; }
+  td { padding: 7px 10px; border-top: 1px solid var(--border); color: var(--text); }
+  td:first-child { color: white; font-weight: 500; }
+
+  /* Part divider */
+  .part-divider {
+    margin: 40px 0 30px 0;
+    padding-top: 25px;
+    border-top: 2px solid var(--primary);
+    page-break-before: always;
+  }
+  .part-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+  }
+  .part-title {
+    font-size: 20pt;
+    font-weight: 800;
+    color: white;
+  }
+
+  /* Footer */
+  .doc-footer {
+    margin-top: 50px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* 3-col grid for overview */
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .grid-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 12px; }
+  .grid-card-title { font-size: 9pt; font-weight: 600; color: white; margin-bottom: 4px; }
+  .grid-card-desc { font-size: 8.5pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER PAGE ==================== -->
+<div class="cover">
+  <div class="cover-logo">X</div>
+  <h1>Control Center X Ultra</h1>
+  <h2>Enterprise Discord Ticket System</h2>
+  <div class="cover-line"></div>
+  <h2 style="font-size: 14pt; color: white; margin-bottom: 8px;">Installations- &amp; Benutzeranleitung</h2>
+  <p style="color: var(--muted); font-size: 10pt; max-width: 400px;">
+    Vollst&auml;ndige Dokumentation zur Installation auf Debian 12 VPS und Verwaltung von Benutzern und Rechten
+  </p>
+  <div class="cover-meta" style="margin-top: 50px;">
+    VERSION 1.0 // FEBRUAR 2026<br>
+    TICKET.ARMESA.DE
+  </div>
+</div>
+
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<div class="toc">
+  <h2>Inhaltsverzeichnis</h2>
+
+  <div class="toc-section">Teil 1: Installation</div>
+  <ul>
+    <li><a href="#overview"><span>Installation &Uuml;bersicht</span><span class="num">3</span></a></li>
+    <li><a href="#requirements"><span>Voraussetzungen</span><span class="num">3</span></a></li>
+    <li><a href="#step1"><span>Schritt 1: Server vorbereiten</span><span class="num">4</span></a></li>
+    <li><a href="#step2"><span>Schritt 2: MongoDB installieren</span><span class="num">4</span></a></li>
+    <li><a href="#step3"><span>Schritt 3: Python &amp; Dependencies</span><span class="num">5</span></a></li>
+    <li><a href="#step4"><span>Schritt 4: Discord Bot einrichten</span><span class="num">5</span></a></li>
+    <li><a href="#step5"><span>Schritt 5: Web Panel einrichten</span><span class="num">6</span></a></li>
+    <li><a href="#step6"><span>Schritt 6: Nginx &amp; HTTPS</span><span class="num">7</span></a></li>
+    <li><a href="#step7"><span>Schritt 7: Supervisor &amp; Autostart</span><span class="num">8</span></a></li>
+    <li><a href="#step8"><span>Schritt 8: Firewall &amp; Sicherheit</span><span class="num">9</span></a></li>
+    <li><a href="#step9"><span>Schritt 9: Discord Developer Portal</span><span class="num">9</span></a></li>
+    <li><a href="#step10"><span>Schritt 10: Erster Start &amp; Test</span><span class="num">10</span></a></li>
+  </ul>
+
+  <div class="toc-section">Teil 2: Benutzerverwaltung</div>
+  <ul>
+    <li><a href="#users-overview"><span>Benutzerverwaltung &Uuml;bersicht</span><span class="num">11</span></a></li>
+    <li><a href="#users-roles"><span>Rollen &amp; Berechtigungen</span><span class="num">11</span></a></li>
+    <li><a href="#users-create"><span>Benutzer anlegen</span><span class="num">13</span></a></li>
+    <li><a href="#users-manage"><span>Benutzer verwalten</span><span class="num">14</span></a></li>
+    <li><a href="#users-api"><span>API-Zugang &amp; Authentifizierung</span><span class="num">15</span></a></li>
+  </ul>
+
+  <div class="toc-section">Anhang</div>
+  <ul>
+    <li><a href="#troubleshooting"><span>Troubleshooting</span><span class="num">16</span></a></li>
+    <li><a href="#backup"><span>Backup &amp; Recovery</span><span class="num">16</span></a></li>
+  </ul>
+</div>
+
+<!-- ==================== PART 1: INSTALLATION ==================== -->
+<div class="content">
+
+<h2 class="section-title" id="overview">Installation &Uuml;bersicht</h2>
+<p>Das Control Center X Ultra besteht aus drei Hauptkomponenten, die auf dem Server eingerichtet werden m&uuml;ssen:</p>
+<div class="grid-3">
+  <div class="grid-card">
+    <div class="grid-card-title">Discord Bot</div>
+    <div class="grid-card-desc">Python-basierter Bot mit discord.py, verbindet sich mit dem Discord Server</div>
+  </div>
+  <div class="grid-card">
+    <div class="grid-card-title">Web Panel</div>
+    <div class="grid-card-desc">FastAPI Backend + React Frontend Dashboard unter ticket.armesa.de</div>
+  </div>
+  <div class="grid-card">
+    <div class="grid-card-title">MongoDB</div>
+    <div class="grid-card-desc">Datenbank f&uuml;r Tickets, Benutzer, Events, Metriken und Audit-Logs</div>
+  </div>
+</div>
+<p>Die Installation erfolgt auf einem <strong>Debian 12</strong> Server mit Root-Zugriff. Die gesch&auml;tzte Installationszeit betr&auml;gt ca. <strong>20&ndash;30 Minuten</strong>.</p>
+
+<h2 class="section-title" id="requirements">Voraussetzungen</h2>
+<p>Folgendes wird ben&ouml;tigt bevor die Installation beginnen kann:</p>
+<ul class="checklist">
+  <li><span class="check">&#10003;</span> <strong>Debian 12 VPS</strong> mit mindestens 1 GB RAM und 10 GB Speicher</li>
+  <li><span class="check">&#10003;</span> <strong>Root-Zugriff</strong> (SSH als root oder sudo-Rechte)</li>
+  <li><span class="check">&#10003;</span> <strong>Domain/Subdomain</strong> (z.B. ticket.armesa.de) mit DNS A-Record auf die Server-IP</li>
+  <li><span class="check">&#10003;</span> <strong>Discord Bot Token</strong> aus dem Discord Developer Portal</li>
+  <li><span class="check">&#10003;</span> <strong>Discord Server IDs</strong> (Guild ID, Channel IDs, Rollen IDs)</li>
+</ul>
+<div class="info-box warning">
+  <span class="icon">&#9888;</span>
+  <div><strong>Wichtig:</strong> Stelle sicher, dass der DNS A-Record f&uuml;r die Subdomain bereits auf die IP-Adresse des Servers zeigt, bevor du mit Schritt 6 (HTTPS) beginnst.</div>
+</div>
+
+<!-- STEP 1 -->
+<h2 class="section-title" id="step1">Schritt 1: Server vorbereiten</h2>
+<p>Verbinde dich per SSH mit dem Server und aktualisiere das System:</p>
+<div class="code-block no-break">
+  <div class="code-title">SSH-Verbindung &amp; System-Update</div>
+  <div class="code-content"><span class="comment"># Per SSH verbinden</span>
+ssh root@DEINE_SERVER_IP
+
+<span class="comment"># System aktualisieren</span>
+apt update && apt upgrade -y
+
+<span class="comment"># Basis-Pakete installieren</span>
+apt install -y \
+  curl wget git gnupg2 \
+  build-essential gcc \
+  ufw \
+  software-properties-common</div>
+</div>
+<p>Installationsverzeichnis anlegen:</p>
+<div class="code-block no-break">
+  <div class="code-title">Verzeichnisstruktur</div>
+  <div class="code-content">mkdir -p /opt/ccx-ultra/{bot,web,web/static,logs,backups,transcripts}
+cd /opt/ccx-ultra</div>
+</div>
+
+<!-- STEP 2 -->
+<h2 class="section-title" id="step2">Schritt 2: MongoDB installieren</h2>
+<p>MongoDB 7.0 als Datenbank installieren und starten:</p>
+<div class="code-block no-break">
+  <div class="code-title">MongoDB 7.0 auf Debian 12</div>
+  <div class="code-content"><span class="comment"># GPG Key importieren</span>
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
+  gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+
+<span class="comment"># Repository hinzuf&uuml;gen</span>
+echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] \
+  http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | \
+  tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+<span class="comment"># Installieren</span>
+apt update
+apt install -y mongodb-org
+
+<span class="comment"># Starten und Autostart aktivieren</span>
+systemctl start mongod
+systemctl enable mongod
+
+<span class="comment"># Status pr&uuml;fen</span>
+systemctl status mongod</div>
+</div>
+<div class="info-box success">
+  <span class="icon">&#10003;</span>
+  <div>MongoDB l&auml;uft nun auf <code>localhost:27017</code>. F&uuml;r die Produktionsumgebung ist keine zus&auml;tzliche Konfiguration n&ouml;tig, da nur lokaler Zugriff besteht.</div>
+</div>
+
+<!-- STEP 3 -->
+<h2 class="section-title" id="step3">Schritt 3: Python &amp; Dependencies</h2>
+<div class="code-block no-break">
+  <div class="code-title">Python Setup</div>
+  <div class="code-content"><span class="comment"># Python installieren</span>
+apt install -y python3 python3-pip python3-venv python3-dev
+
+<span class="comment"># Virtual Environment erstellen</span>
+python3 -m venv /opt/ccx-ultra/venv
+
+<span class="comment"># Aktivieren</span>
+source /opt/ccx-ultra/venv/bin/activate
+
+<span class="comment"># Dependencies installieren</span>
+pip install --upgrade pip
+pip install \
+  fastapi uvicorn \
+  motor pymongo \
+  bcrypt pyjwt "python-jose[cryptography]" \
+  python-dotenv \
+  discord.py aiohttp \
+  python-multipart \
+  sse-starlette</div>
+</div>
+
+<!-- STEP 4 -->
+<h2 class="section-title" id="step4">Schritt 4: Discord Bot einrichten</h2>
+<p>Die Bot-Dateien auf den Server kopieren:</p>
+<div class="code-block no-break">
+  <div class="code-title">Bot-Dateien kopieren</div>
+  <div class="code-content"><span class="comment"># bot.py auf den Server &uuml;bertragen (von deinem lokalen PC)</span>
+scp bot.py root@DEINE_SERVER_IP:/opt/ccx-ultra/bot/</div>
+</div>
+<p>Konfigurationsdatei erstellen:</p>
+<div class="code-block no-break">
+  <div class="code-title">/opt/ccx-ultra/bot/config.env</div>
+  <div class="code-content"><span class="comment"># Discord Bot Token (aus Developer Portal)</span>
+DISCORD_BOT_TOKEN=DEIN_BOT_TOKEN_HIER
+
+<span class="comment"># Discord Server ID</span>
+DISCORD_GUILD_ID=1407623359365120090
+
+<span class="comment"># Channel IDs</span>
+TICKET_CHANNEL_ID=1469120567532847225
+TRANSCRIPT_LOG_CHANNEL_ID=1470212303260483817
+TICKET_CATEGORY_ID=1469120434115969064
+
+<span class="comment"># Support Rollen IDs (komma-getrennt)</span>
+SUPPORT_ROLE_IDS=368510579511656449,372850494445453314,1006197315566051388
+
+<span class="comment"># Web Panel API URL (lokaler Zugriff)</span>
+API_URL=http://localhost:8001/api
+
+<span class="comment"># Ticket-Einstellungen</span>
+MAX_TICKETS_PER_USER=3
+SLA_FIRST_RESPONSE_MINUTES=30
+AUTO_CLOSE_INACTIVE_HOURS=48</div>
+</div>
+<div class="info-box danger">
+  <span class="icon">&#9888;</span>
+  <div><strong>Niemals</strong> den Bot-Token &ouml;ffentlich teilen oder in Git committen! Nutze <code>.gitignore</code> f&uuml;r alle .env Dateien.</div>
+</div>
+
+<!-- STEP 5 -->
+<h2 class="section-title" id="step5">Schritt 5: Web Panel einrichten</h2>
+<p>Backend und Frontend auf den Server &uuml;bertragen:</p>
+<div class="code-block no-break">
+  <div class="code-title">Web Panel Dateien</div>
+  <div class="code-content"><span class="comment"># server.py auf den Server kopieren</span>
+scp server.py root@DEINE_SERVER_IP:/opt/ccx-ultra/web/
+
+<span class="comment"># React Frontend bauen (auf deinem lokalen PC)</span>
+cd frontend
+yarn build
+
+<span class="comment"># Build-Ordner auf den Server kopieren</span>
+scp -r build/* root@DEINE_SERVER_IP:/opt/ccx-ultra/web/static/</div>
+</div>
+<p>Konfigurationsdatei erstellen:</p>
+<div class="code-block no-break">
+  <div class="code-title">/opt/ccx-ultra/web/.env</div>
+  <div class="code-content"><span class="comment"># MongoDB Verbindung (lokal)</span>
+MONGO_URL=mongodb://localhost:27017
+DB_NAME=ccx_ultra
+
+<span class="comment"># Sicherheit (generiere einen einzigartigen Key!)</span>
+JWT_SECRET=GENERIERE_EINEN_SICHEREN_KEY
+CORS_ORIGINS=https://ticket.armesa.de
+
+<span class="comment"># Discord Bot Token (f&uuml;r Webhook-Authentifizierung)</span>
+DISCORD_BOT_TOKEN=DEIN_BOT_TOKEN_HIER
+
+<span class="comment"># Discord IDs</span>
+DISCORD_GUILD_ID=1407623359365120090
+TICKET_CHANNEL_ID=1469120567532847225
+TRANSCRIPT_LOG_CHANNEL_ID=1470212303260483817
+TICKET_CATEGORY_ID=1469120434115969064
+SUPPORT_ROLE_IDS=368510579511656449,372850494445453314,1006197315566051388</div>
+</div>
+<p>Einen sicheren JWT-Secret generieren:</p>
+<div class="code-block no-break">
+  <div class="code-title">Sicheren Key generieren</div>
+  <div class="code-content">python3 -c "import secrets; print(secrets.token_hex(32))"</div>
+</div>
+
+<!-- STEP 6 -->
+<div class="page-break"></div>
+<h2 class="section-title" id="step6">Schritt 6: Nginx &amp; HTTPS</h2>
+<div class="code-block no-break">
+  <div class="code-title">Nginx installieren</div>
+  <div class="code-content">apt install -y nginx certbot python3-certbot-nginx</div>
+</div>
+<p>Nginx-Konfiguration erstellen:</p>
+<div class="code-block">
+  <div class="code-title">/etc/nginx/sites-available/ticket.armesa.de</div>
+  <div class="code-content"><span class="comment"># Rate Limiting Zone</span>
+limit_req_zone $binary_remote_addr zone=ccx_limit:10m rate=10r/s;
+
+server {
+    listen 80;
+    server_name ticket.armesa.de;
+
+    <span class="comment"># Security Headers</span>
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    <span class="comment"># Gzip Kompression</span>
+    gzip on;
+    gzip_vary on;
+    gzip_types text/plain text/css application/json
+               application/javascript text/xml;
+
+    <span class="comment"># API Reverse Proxy</span>
+    location /api/ {
+        limit_req zone=ccx_limit burst=20 nodelay;
+        proxy_pass http://127.0.0.1:8001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;  <span class="comment"># SSE Support</span>
+        proxy_cache off;
+        proxy_read_timeout 86400s;
+    }
+
+    <span class="comment"># Frontend (React Build)</span>
+    location / {
+        root /opt/ccx-ultra/web/static;
+        try_files $uri $uri/ /index.html;
+    }
+}</div>
+</div>
+<div class="code-block no-break">
+  <div class="code-title">Nginx aktivieren &amp; HTTPS</div>
+  <div class="code-content"><span class="comment"># Seite aktivieren</span>
+ln -sf /etc/nginx/sites-available/ticket.armesa.de /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+nginx -t && systemctl reload nginx
+
+<span class="comment"># HTTPS Zertifikat erstellen</span>
+certbot --nginx -d ticket.armesa.de \
+  --email admin@armesa.de \
+  --agree-tos --non-interactive
+
+<span class="comment"># Renewal pr&uuml;fen</span>
+certbot renew --dry-run</div>
+</div>
+
+<!-- STEP 7 -->
+<h2 class="section-title" id="step7">Schritt 7: Supervisor &amp; Autostart</h2>
+<div class="code-block no-break">
+  <div class="code-title">Supervisor installieren</div>
+  <div class="code-content">apt install -y supervisor</div>
+</div>
+<div class="code-block">
+  <div class="code-title">/etc/supervisor/conf.d/ccx-ultra.conf</div>
+  <div class="code-content">[program:ccx-webpanel]
+command=/opt/ccx-ultra/venv/bin/uvicorn server:app --host 0.0.0.0 --port 8001 --workers 2
+directory=/opt/ccx-ultra/web
+user=root
+autostart=true
+autorestart=true
+startsecs=5
+stderr_logfile=/opt/ccx-ultra/logs/webpanel.err.log
+stdout_logfile=/opt/ccx-ultra/logs/webpanel.out.log
+stderr_logfile_maxbytes=10MB
+stdout_logfile_maxbytes=10MB
+environment=PATH="/opt/ccx-ultra/venv/bin"
+
+[program:ccx-bot]
+command=/opt/ccx-ultra/venv/bin/python bot.py
+directory=/opt/ccx-ultra/bot
+user=root
+autostart=true
+autorestart=true
+startsecs=5
+stderr_logfile=/opt/ccx-ultra/logs/bot.err.log
+stdout_logfile=/opt/ccx-ultra/logs/bot.out.log
+stderr_logfile_maxbytes=10MB
+stdout_logfile_maxbytes=10MB
+environment=PATH="/opt/ccx-ultra/venv/bin"</div>
+</div>
+<div class="code-block no-break">
+  <div class="code-title">Supervisor starten</div>
+  <div class="code-content">supervisorctl reread
+supervisorctl update
+supervisorctl status</div>
+</div>
+
+<!-- STEP 8 -->
+<h2 class="section-title" id="step8">Schritt 8: Firewall &amp; Sicherheit</h2>
+<div class="code-block no-break">
+  <div class="code-title">UFW Firewall konfigurieren</div>
+  <div class="code-content">ufw allow 22/tcp   <span class="comment"># SSH</span>
+ufw allow 80/tcp   <span class="comment"># HTTP (Redirect)</span>
+ufw allow 443/tcp  <span class="comment"># HTTPS</span>
+ufw --force enable
+ufw status verbose</div>
+</div>
+<div class="info-box info">
+  <span class="icon">&#128274;</span>
+  <div>MongoDB (Port 27017) und der Webserver (Port 8001) sind <strong>nicht</strong> von au&szlig;en erreichbar. Der Zugriff erfolgt ausschlie&szlig;lich &uuml;ber Nginx auf Port 443.</div>
+</div>
+
+<!-- STEP 9 -->
+<h2 class="section-title" id="step9">Schritt 9: Discord Developer Portal</h2>
+<p>Im <strong>Discord Developer Portal</strong> (discord.com/developers/applications) folgende Einstellungen vornehmen:</p>
+<h3>Privileged Gateway Intents (Pflicht)</h3>
+<ul class="checklist">
+  <li><span class="check">&#10003;</span> <strong>PRESENCE INTENT</strong> &ndash; F&uuml;r Online-Status-Erkennung und Auto-Ping</li>
+  <li><span class="check">&#10003;</span> <strong>SERVER MEMBERS INTENT</strong> &ndash; F&uuml;r Mitglieder-Zugriff und Rollenpr&uuml;fung</li>
+  <li><span class="check">&#10003;</span> <strong>MESSAGE CONTENT INTENT</strong> &ndash; F&uuml;r Transcript-Generierung</li>
+</ul>
+<h3>Bot Permissions</h3>
+<table>
+  <tr><th>Berechtigung</th><th>Zweck</th></tr>
+  <tr><td>Manage Channels</td><td>Ticket-Channels erstellen/bearbeiten</td></tr>
+  <tr><td>Read Messages</td><td>Channels lesen</td></tr>
+  <tr><td>Send Messages</td><td>Nachrichten in Tickets senden</td></tr>
+  <tr><td>Manage Messages</td><td>Nachrichten verwalten/l&ouml;schen</td></tr>
+  <tr><td>Embed Links</td><td>Rich Embeds senden</td></tr>
+  <tr><td>Attach Files</td><td>Transcripts hochladen</td></tr>
+  <tr><td>Read Message History</td><td>Transcripts generieren</td></tr>
+  <tr><td>Use Slash Commands</td><td>/ticket-panel Befehl</td></tr>
+</table>
+<h3>OAuth2 Einladungs-URL</h3>
+<div class="code-block no-break">
+  <div class="code-title">Bot einladen (Scopes: bot, applications.commands)</div>
+  <div class="code-content">https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&amp;permissions=8&amp;scope=bot%20applications.commands</div>
+</div>
+<div class="info-box warning">
+  <span class="icon">&#9888;</span>
+  <div><strong>Rollen-Position:</strong> Die Bot-Rolle muss in den Server-Einstellungen <strong>&uuml;ber</strong> allen Support-Rollen positioniert sein!</div>
+</div>
+
+<!-- STEP 10 -->
+<h2 class="section-title" id="step10">Schritt 10: Erster Start &amp; Test</h2>
+<div class="code-block no-break">
+  <div class="code-title">System starten und pr&uuml;fen</div>
+  <div class="code-content"><span class="comment"># Alle Dienste starten</span>
+supervisorctl start all
+
+<span class="comment"># Status pr&uuml;fen</span>
+supervisorctl status
+<span class="comment"># ccx-bot         RUNNING   pid 1234, uptime 0:00:05
+# ccx-webpanel    RUNNING   pid 1235, uptime 0:00:05</span>
+
+<span class="comment"># API testen</span>
+curl https://ticket.armesa.de/api/health
+<span class="comment"># {"status":"ok","service":"Control Center X Ultra"}</span>
+
+<span class="comment"># Web Panel &ouml;ffnen: https://ticket.armesa.de
+# Login: admin / admin123</span>
+
+<span class="comment"># Im Discord Server den Ticket-Panel erstellen:
+# /ticket-panel (als Admin im Bot-Channel ausf&uuml;hren)</span></div>
+</div>
+<div class="info-box danger">
+  <span class="icon">&#9888;</span>
+  <div><strong>Sofort nach dem ersten Login:</strong> &Auml;ndere das Standard-Admin-Passwort! Erstelle neue Benutzer mit sicheren Passw&ouml;rtern.</div>
+</div>
+
+
+<!-- ==================== PART 2: BENUTZERVERWALTUNG ==================== -->
+<div class="part-divider">
+  <div class="part-label">Teil 2</div>
+  <div class="part-title">Benutzerverwaltung &amp; Rechte</div>
+</div>
+
+<h2 class="section-title" id="users-overview">Benutzerverwaltung &Uuml;bersicht</h2>
+<p>Das System verwendet ein rollenbasiertes Zugangssystem mit drei Berechtigungsstufen. Benutzer werden &uuml;ber das Web Panel oder die API erstellt und verwaltet.</p>
+<div class="info-box info">
+  <span class="icon">&#128274;</span>
+  <div>Die Benutzerverwaltung ist <strong>nur f&uuml;r Admins</strong> zug&auml;nglich. Navigiere zu <strong>Settings</strong> in der Seitenleiste.</div>
+</div>
+
+<h2 class="section-title" id="users-roles">Rollen &amp; Berechtigungen</h2>
+<p>Es gibt drei Rollen mit unterschiedlichen Berechtigungen:</p>
+
+<!-- Admin Role -->
+<div class="role-card admin no-break">
+  <div class="role-header">
+    <div class="role-icon admin" style="color: #ef4444;">&#9733;</div>
+    <div>
+      <div class="role-name">Admin</div>
+      <div class="role-label admin">Vollzugriff</div>
+    </div>
+  </div>
+  <div class="perms-grid">
+    <div class="perm"><span class="check">&#10003;</span> Dashboard &amp; KPIs einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Alle Tickets einsehen &amp; bearbeiten</div>
+    <div class="perm"><span class="check">&#10003;</span> Tickets claimen, schlie&szlig;en, eskalieren</div>
+    <div class="perm"><span class="check">&#10003;</span> Notizen &amp; Priorit&auml;t &auml;ndern</div>
+    <div class="perm"><span class="check">&#10003;</span> Analytics &amp; SLA Daten einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Support-Ranking einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Audit-Log einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> <strong>Benutzer anlegen &amp; l&ouml;schen</strong></div>
+    <div class="perm"><span class="check">&#10003;</span> <strong>Settings-Seite Zugang</strong></div>
+    <div class="perm"><span class="check">&#10003;</span> <strong>Bot-Konfiguration einsehen</strong></div>
+  </div>
+</div>
+
+<!-- Support Role -->
+<div class="role-card support no-break">
+  <div class="role-header">
+    <div class="role-icon support" style="color: #3b82f6;">&#9734;</div>
+    <div>
+      <div class="role-name">Support</div>
+      <div class="role-label support">Ticket-Bearbeitung</div>
+    </div>
+  </div>
+  <div class="perms-grid">
+    <div class="perm"><span class="check">&#10003;</span> Dashboard &amp; KPIs einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Alle Tickets einsehen &amp; bearbeiten</div>
+    <div class="perm"><span class="check">&#10003;</span> Tickets claimen, schlie&szlig;en, eskalieren</div>
+    <div class="perm"><span class="check">&#10003;</span> Notizen &amp; Priorit&auml;t &auml;ndern</div>
+    <div class="perm"><span class="check">&#10003;</span> Analytics &amp; SLA Daten einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Support-Ranking einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Audit-Log einsehen</div>
+    <div class="perm denied"><span class="lock">&#128274;</span> Keine Benutzerverwaltung</div>
+    <div class="perm denied"><span class="lock">&#128274;</span> Kein Zugang zu Settings</div>
+  </div>
+</div>
+
+<!-- Viewer Role -->
+<div class="role-card viewer no-break">
+  <div class="role-header">
+    <div class="role-icon viewer" style="color: #8888a0;">&#9673;</div>
+    <div>
+      <div class="role-name">Viewer</div>
+      <div class="role-label viewer">Nur Lesen</div>
+    </div>
+  </div>
+  <div class="perms-grid">
+    <div class="perm"><span class="check">&#10003;</span> Dashboard &amp; KPIs einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Tickets einsehen (nur lesen)</div>
+    <div class="perm"><span class="check">&#10003;</span> Analytics &amp; SLA einsehen</div>
+    <div class="perm"><span class="check">&#10003;</span> Support-Ranking einsehen</div>
+    <div class="perm denied"><span class="lock">&#128274;</span> Keine Ticket-Aktionen</div>
+    <div class="perm denied"><span class="lock">&#128274;</span> Kein Audit-Log Zugang</div>
+    <div class="perm denied"><span class="lock">&#128274;</span> Keine Benutzerverwaltung</div>
+    <div class="perm denied"><span class="lock">&#128274;</span> Kein Zugang zu Settings</div>
+  </div>
+</div>
+
+<h2 class="section-title" id="users-create">Benutzer anlegen</h2>
+
+<h3>Methode 1: &Uuml;ber das Web Panel (empfohlen)</h3>
+<div class="step"><div class="step-num">1</div><div>Als <strong>Admin</strong> einloggen</div></div>
+<div class="step"><div class="step-num">2</div><div>In der Seitenleiste auf <strong>Settings</strong> klicken</div></div>
+<div class="step"><div class="step-num">3</div><div>Button <strong>Add User</strong> oben rechts klicken</div></div>
+<div class="step"><div class="step-num">4</div><div>Im Dialog ausf&uuml;llen: <strong>Username</strong>, <strong>Passwort</strong>, <strong>Rolle</strong></div></div>
+<div class="step"><div class="step-num">5</div><div>Button <strong>Create User</strong> klicken</div></div>
+
+<h3>Methode 2: &Uuml;ber die API</h3>
+<div class="code-block">
+  <div class="code-title">Benutzer per API erstellen</div>
+  <div class="code-content"><span class="comment"># 1. Als Admin einloggen und Token erhalten</span>
+TOKEN=$(curl -s -X POST https://ticket.armesa.de/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+<span class="comment"># 2. Neuen Support-Benutzer erstellen</span>
+curl -X POST https://ticket.armesa.de/api/admin/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "username": "sarah_support",
+    "password": "sicheres_passwort_123",
+    "role": "support"
+  }'
+
+<span class="comment"># 3. Neuen Viewer erstellen</span>
+curl -X POST https://ticket.armesa.de/api/admin/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "username": "chef_viewer",
+    "password": "anderes_sicheres_passwort",
+    "role": "viewer"
+  }'</div>
+</div>
+<div class="info-box info">
+  <span class="icon">&#128274;</span>
+  <div>Passw&ouml;rter werden automatisch mit <strong>bcrypt</strong> gehasht gespeichert. Klartext-Passw&ouml;rter werden niemals in der Datenbank abgelegt.</div>
+</div>
+
+<h2 class="section-title" id="users-manage">Benutzer verwalten</h2>
+
+<h3>Alle Benutzer anzeigen</h3>
+<p>In der <strong>Settings</strong>-Seite siehst du eine Tabelle aller Benutzer mit Username, Rolle und Erstellungsdatum.</p>
+
+<h3>Benutzer l&ouml;schen</h3>
+<div class="step"><div class="step-num">1</div><div>In der Benutzertabelle unter <strong>Settings</strong></div></div>
+<div class="step"><div class="step-num">2</div><div>Auf das <strong>Papierkorb-Icon</strong> neben dem Benutzer klicken</div></div>
+<div class="step"><div class="step-num">3</div><div>Best&auml;tigung im Dialog</div></div>
+
+<div class="info-box warning">
+  <span class="icon">&#9888;</span>
+  <div>Der <strong>admin</strong>-Standardbenutzer kann nicht &uuml;ber die UI gel&ouml;scht werden. Dies ist ein Sicherheitsmechanismus.</div>
+</div>
+
+<h3>Benutzer per API l&ouml;schen</h3>
+<div class="code-block no-break">
+  <div class="code-title">Benutzer per API l&ouml;schen</div>
+  <div class="code-content"><span class="comment"># Alle Benutzer auflisten</span>
+curl -s https://ticket.armesa.de/api/admin/users \
+  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
+
+<span class="comment"># Benutzer l&ouml;schen</span>
+curl -X DELETE https://ticket.armesa.de/api/admin/users/USER_ID \
+  -H "Authorization: Bearer $TOKEN"</div>
+</div>
+
+<h3>Passwort zur&uuml;cksetzen</h3>
+<div class="code-block">
+  <div class="code-title">Passwort per MongoDB zur&uuml;cksetzen</div>
+  <div class="code-content"><span class="comment"># Neuen Passwort-Hash generieren</span>
+python3 -c "import bcrypt; print(bcrypt.hashpw(b'neues_passwort', bcrypt.gensalt()).decode())"
+
+<span class="comment"># MongoDB Shell &ouml;ffnen</span>
+mongosh
+
+<span class="comment"># Hash in DB aktualisieren</span>
+use ccx_ultra
+db.panel_users.updateOne(
+  { username: "sarah_support" },
+  { $set: { password_hash: "HASH_VON_OBEN_HIER" } }
+)</div>
+</div>
+
+<h2 class="section-title" id="users-api">API-Zugang &amp; Authentifizierung</h2>
+<p>Jeder API-Zugriff erfordert einen g&uuml;ltigen JWT-Token im Authorization-Header:</p>
+<div class="code-block">
+  <div class="code-title">Authentifizierungsablauf</div>
+  <div class="code-content"><span class="comment"># 1. Login &rarr; Token erhalten</span>
+curl -X POST https://ticket.armesa.de/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"DEIN_USER","password":"DEIN_PASSWORT"}'
+
+<span class="comment"># Antwort:
+# { "token": "eyJhbGci...", "user": {"username": "...", "role": "admin"} }</span>
+
+<span class="comment"># 2. Token in allen Anfragen verwenden</span>
+curl https://ticket.armesa.de/api/kpi \
+  -H "Authorization: Bearer DEIN_TOKEN"
+
+<span class="comment"># 3. Aktuellen Benutzer pr&uuml;fen</span>
+curl https://ticket.armesa.de/api/auth/me \
+  -H "Authorization: Bearer DEIN_TOKEN"</div>
+</div>
+<div class="info-box info">
+  <span class="icon">&#128337;</span>
+  <div>Tokens sind <strong>24 Stunden</strong> g&uuml;ltig. Danach muss ein neuer Token per Login angefordert werden.</div>
+</div>
+
+
+<!-- ==================== APPENDIX ==================== -->
+<div class="part-divider">
+  <div class="part-label">Anhang</div>
+  <div class="part-title">Troubleshooting &amp; Backup</div>
+</div>
+
+<h2 class="section-title" id="troubleshooting">Troubleshooting</h2>
+
+<h3>Bot startet nicht</h3>
+<div class="code-block no-break">
+  <div class="code-title">Bot-Fehler pr&uuml;fen</div>
+  <div class="code-content">tail -50 /opt/ccx-ultra/logs/bot.err.log
+
+<span class="comment"># H&auml;ufige Ursachen:
+# - Ung&uuml;ltiger Token    &rarr; config.env pr&uuml;fen
+# - Fehlende Intents     &rarr; Developer Portal aktivieren
+# - Python-Modul fehlt   &rarr; venv aktivieren + pip install</span></div>
+</div>
+
+<h3>Web Panel nicht erreichbar</h3>
+<div class="code-block no-break">
+  <div class="code-title">Web Panel debuggen</div>
+  <div class="code-content">supervisorctl status ccx-webpanel
+curl http://localhost:8001/api/health
+nginx -t
+systemctl status nginx
+certbot certificates</div>
+</div>
+
+<h3>MongoDB-Probleme</h3>
+<div class="code-block no-break">
+  <div class="code-title">MongoDB debuggen</div>
+  <div class="code-content">systemctl status mongod
+tail -50 /var/log/mongodb/mongod.log
+mongosh --eval "db.adminCommand({serverStatus: 1}).ok"</div>
+</div>
+
+<h2 class="section-title" id="backup">Backup &amp; Recovery</h2>
+<div class="code-block">
+  <div class="code-title">Backup (automatisch t&auml;glich um 3:00 Uhr)</div>
+  <div class="code-content"><span class="comment"># Manuelles Backup</span>
+/opt/ccx-ultra/backup.sh
+
+<span class="comment"># Backup-Inhalt:
+# /opt/ccx-ultra/backups/YYYYMMDD_HHMMSS/
+#   mongodb/     &larr; MongoDB Dump
+#   .env         &larr; Web Panel Config
+#   config.env   &larr; Bot Config</span>
+
+<span class="comment"># Automatisches Backup pr&uuml;fen</span>
+crontab -l | grep backup
+
+<span class="comment"># Aus Backup wiederherstellen</span>
+mongorestore --db ccx_ultra \
+  /opt/ccx-ultra/backups/DATUM/mongodb/ccx_ultra/
+
+<span class="comment"># Nur die letzten 7 Backups werden behalten</span></div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  CONTROL CENTER X ULTRA // DOKUMENTATION V1.0 // FEBRUAR 2026 // TICKET.ARMESA.DE
+</div>
+
+</div>
+</body>
+</html>
