@@ -340,11 +340,27 @@ echo -e "${YELLOW}Hinweis: DNS muss auf diesen Server zeigen!${NC}"
 echo -e "${YELLOW}Überprüfen Sie: dig $DOMAIN${NC}"
 echo ""
 
-# Check DNS first
-SERVER_IP=$(curl -s ifconfig.me)
-DNS_IP=$(dig +short "$DOMAIN" | head -n1)
+# Check DNS first - support both IPv4 and IPv6
+SERVER_IP4=$(curl -4 -s ifconfig.me 2>/dev/null || echo "")
+SERVER_IP6=$(curl -6 -s ifconfig.me 2>/dev/null || echo "")
+DNS_IP4=$(dig +short A "$DOMAIN" | head -n1 2>/dev/null || echo "")
+DNS_IP6=$(dig +short AAAA "$DOMAIN" | head -n1 2>/dev/null || echo "")
 
-if [ "$SERVER_IP" = "$DNS_IP" ]; then
+echo -e "${BLUE}Server IPv4: $SERVER_IP4${NC}"
+echo -e "${BLUE}Server IPv6: $SERVER_IP6${NC}"
+echo -e "${BLUE}DNS A-Record: $DNS_IP4${NC}"
+echo -e "${BLUE}DNS AAAA-Record: $DNS_IP6${NC}"
+echo ""
+
+DNS_MATCH=false
+if [ -n "$SERVER_IP4" ] && [ "$SERVER_IP4" = "$DNS_IP4" ]; then
+    DNS_MATCH=true
+fi
+if [ -n "$SERVER_IP6" ] && [ "$SERVER_IP6" = "$DNS_IP6" ]; then
+    DNS_MATCH=true
+fi
+
+if [ "$DNS_MATCH" = true ]; then
     echo -e "${GREEN}✓ DNS zeigt korrekt auf diesen Server${NC}"
     
     # Certbot ausführen
@@ -356,10 +372,10 @@ if [ "$SERVER_IP" = "$DNS_IP" ]; then
     fi
 else
     log_warning "DNS stimmt nicht überein!"
-    echo "  Server IP: $SERVER_IP"
-    echo "  DNS IP: $DNS_IP"
+    echo "  Server IPv4: $SERVER_IP4 | DNS A-Record: $DNS_IP4"
+    echo "  Server IPv6: $SERVER_IP6 | DNS AAAA-Record: $DNS_IP6"
     echo ""
-    echo "Bitte DNS konfigurieren und später Certbot manuell ausführen:"
+    echo "Bitte DNS konfigurieren (A-Record oder AAAA-Record) und später Certbot manuell ausführen:"
     echo "  certbot --nginx -d $DOMAIN"
 fi
 
