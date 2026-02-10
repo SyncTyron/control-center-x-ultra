@@ -23,7 +23,11 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-JWT_SECRET = os.environ.get('JWT_SECRET', 'fallback-secret')
+# Security: JWT_SECRET must be set in environment - no fallback for production
+JWT_SECRET = os.environ.get('JWT_SECRET')
+if not JWT_SECRET:
+    raise ValueError("JWT_SECRET environment variable is required!")
+
 DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN', '')
 SUPPORT_ROLE_IDS = os.environ.get('SUPPORT_ROLE_IDS', '').split(',')
 
