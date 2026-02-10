@@ -5,7 +5,7 @@ import '../styles/Analytics.css';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Analytics({ user }) {
-  const [slaData, setSlaData] = useState([]);
+  const [slaData, setSlaData] = useState({ compliance: 0, total: 0, breached: 0, by_priority: {}, daily: [] });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ function Analytics({ user }) {
       const response = await axios.get(`${API_URL}/api/sla`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setSlaData(response.data);
+      setSlaData(response.data || { compliance: 0, total: 0, breached: 0, by_priority: {}, daily: [] });
     } catch (error) {
       console.error('Error fetching SLA data:', error);
     } finally {
