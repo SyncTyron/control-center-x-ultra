@@ -575,11 +575,12 @@ async def startup():
     # Create default admin if not exists
     admin = await db.panel_users.find_one({"username": "admin"})
     if not admin:
-        await db.panel_users.insert_one({
-            "id": str(uuid.uuid4()),
-            "username": "admin",
-            "password_hash": hash_password("admin123"),
-            "role": "admin",
+        try:
+            await db.panel_users.insert_one({
+                "id": str(uuid.uuid4()),
+                "username": "admin",
+                "password_hash": hash_password("admin123"),
+                "role": "admin",
             "created_at": datetime.now(timezone.utc).isoformat()
         })
         logger.info("Default admin user created (admin/admin123)")
