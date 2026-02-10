@@ -50,7 +50,7 @@ function Dashboard({ user }) {
             <i className="fas fa-ticket-alt"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{kpi?.totalTickets || 0}</div>
+            <div className="kpi-value">{kpi?.total_tickets || 0}</div>
             <div className="kpi-label">Gesamt Tickets</div>
           </div>
         </div>
@@ -60,7 +60,7 @@ function Dashboard({ user }) {
             <i className="fas fa-folder-open"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{kpi?.openTickets || 0}</div>
+            <div className="kpi-value">{kpi?.open_tickets || 0}</div>
             <div className="kpi-label">Offen</div>
           </div>
         </div>
@@ -70,7 +70,7 @@ function Dashboard({ user }) {
             <i className="fas fa-user-check"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{kpi?.claimedTickets || 0}</div>
+            <div className="kpi-value">{kpi?.closed_today || 0}</div>
             <div className="kpi-label">In Bearbeitung</div>
           </div>
         </div>
@@ -80,7 +80,7 @@ function Dashboard({ user }) {
             <i className="fas fa-check-circle"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{kpi?.closedTickets || 0}</div>
+            <div className="kpi-value">{kpi?.closed_today || 0}</div>
             <div className="kpi-label">Geschlossen</div>
           </div>
         </div>
@@ -90,7 +90,7 @@ function Dashboard({ user }) {
             <i className="fas fa-clock"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{Math.round((kpi?.avgResponseTime || 0) / 60)}m</div>
+            <div className="kpi-value">{kpi?.avg_response_time_min || 0}m</div>
             <div className="kpi-label">Ø Antwortzeit</div>
           </div>
         </div>
@@ -100,7 +100,7 @@ function Dashboard({ user }) {
             <i className="fas fa-hourglass-half"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{Math.round((kpi?.avgResolutionTime || 0) / 3600)}h</div>
+            <div className="kpi-value">0h</div>
             <div className="kpi-label">Ø Lösungszeit</div>
           </div>
         </div>
@@ -110,7 +110,7 @@ function Dashboard({ user }) {
             <i className="fas fa-exclamation-triangle"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{kpi?.slaViolations || 0}</div>
+            <div className="kpi-value">{kpi?.sla_breached || 0}</div>
             <div className="kpi-label">SLA Verstöße</div>
           </div>
         </div>
@@ -120,7 +120,7 @@ function Dashboard({ user }) {
             <i className="fas fa-level-up-alt"></i>
           </div>
           <div className="kpi-content">
-            <div className="kpi-value">{kpi?.escalations || 0}</div>
+            <div className="kpi-value">{kpi?.escalated || 0}</div>
             <div className="kpi-label">Eskalationen</div>
           </div>
         </div>
