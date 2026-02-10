@@ -23,7 +23,7 @@ function TicketDetail({ user }) {
       const response = await axios.get(`${API_URL}/api/tickets/${ticketId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setTicket(response.data);
+      setTicket(response.data.ticket || response.data);
     } catch (error) {
       console.error('Error fetching ticket:', error);
     } finally {
