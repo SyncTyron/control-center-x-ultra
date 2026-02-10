@@ -48,7 +48,7 @@ function TicketList({ user }) {
       const response = await axios.get(`${API_URL}/api/search?q=${filters.search}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setTickets(response.data);
+      setTickets(response.data.results || []);
     } catch (error) {
       console.error('Error searching:', error);
     }
