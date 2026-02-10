@@ -146,25 +146,25 @@ function Dashboard({ user }) {
             </thead>
             <tbody>
               {recentTickets.map((ticket) => (
-                <tr key={ticket.ticketId}>
-                  <td>#{String(ticket.ticketId).padStart(4, '0')}</td>
+                <tr key={ticket.id}>
+                  <td>#{ticket.id ? ticket.id.substring(0, 8) : 'N/A'}</td>
                   <td>
-                    <Link to={`/tickets/${ticket.ticketId}`} className="ticket-link">
+                    <Link to={`/tickets/${ticket.id}`} className="ticket-link">
                       {ticket.subject}
                     </Link>
                   </td>
                   <td>{ticket.type}</td>
                   <td>
-                    <span className={`badge badge-${ticket.priority}`}>
-                      {ticket.priority.toUpperCase()}
+                    <span className={`badge badge-${ticket.priority || 'medium'}`}>
+                      {(ticket.priority || 'medium').toUpperCase()}
                     </span>
                   </td>
                   <td>
-                    <span className={`badge badge-${ticket.status}`}>
-                      {ticket.status.toUpperCase()}
+                    <span className={`badge badge-${ticket.status || 'open'}`}>
+                      {(ticket.status || 'open').toUpperCase()}
                     </span>
                   </td>
-                  <td>{new Date(ticket.createdAt).toLocaleString('de-DE')}</td>
+                  <td>{ticket.created_at ? new Date(ticket.created_at).toLocaleString('de-DE') : 'N/A'}</td>
                 </tr>
               ))}
             </tbody>
