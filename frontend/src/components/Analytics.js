@@ -47,76 +47,82 @@ function Analytics({ user }) {
 
       <div className="sla-summary">
         <div className="summary-card">
-          <i className="fas fa-clock"></i>
+          <i className="fas fa-chart-pie"></i>
           <div>
-            <div className="summary-value">{slaData.length}</div>
-            <div className="summary-label">Aktive Tickets</div>
+            <div className="summary-value">{slaData.compliance || 0}%</div>
+            <div className="summary-label">SLA Compliance</div>
+          </div>
+        </div>
+        <div className="summary-card">
+          <i className="fas fa-ticket-alt"></i>
+          <div>
+            <div className="summary-value">{slaData.total || 0}</div>
+            <div className="summary-label">Gesamt Tickets</div>
           </div>
         </div>
         <div className="summary-card danger">
           <i className="fas fa-exclamation-triangle"></i>
           <div>
-            <div className="summary-value">{slaData.filter(t => t.violated).length}</div>
+            <div className="summary-value">{slaData.breached || 0}</div>
             <div className="summary-label">SLA Verstöße</div>
           </div>
         </div>
-        <div className="summary-card warning">
-          <i className="fas fa-hourglass-half"></i>
-          <div>
-            <div className="summary-value">{slaData.filter(t => !t.violated && t.slaRemaining < 600).length}</div>
-            <div className="summary-label">Kritisch</div>
-          </div>
+      </div>
+
+      <div className="sla-section">
+        <h2>SLA nach Priorität</h2>
+        <div className="priority-grid">
+          {Object.entries(slaData.by_priority || {}).map(([priority, data]) => (
+            <div key={priority} className={`priority-card priority-${priority}`}>
+              <div className="priority-header">
+                <span className={`badge badge-${priority}`}>{priority.toUpperCase()}</span>
+              </div>
+              <div className="priority-stats">
+                <div className="stat">
+                  <span className="stat-value">{data.total}</span>
+                  <span className="stat-label">Gesamt</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-value">{data.breached}</span>
+                  <span className="stat-label">Verstöße</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-value">{data.compliance}%</span>
+                  <span className="stat-label">Compliance</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="sla-table-container">
-        <table className="sla-table">
-          <thead>
-            <tr>
-              <th>Ticket ID</th>
-              <th>Betreff</th>
-              <th>Priorität</th>
-              <th>Verstrichene Zeit</th>
-              <th>SLA Verbleibend</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {slaData.map((ticket) => (
-              <tr key={ticket.ticketId} className={ticket.violated ? 'sla-violated' : ''}>
-                <td>#{String(ticket.ticketId).padStart(4, '0')}</td>
-                <td>{ticket.subject}</td>
-                <td>
-                  <span className={`badge badge-${ticket.priority}`}>
-                    {ticket.priority.toUpperCase()}
-                  </span>
-                </td>
-                <td>{formatTime(ticket.elapsed)}</td>
-                <td className={ticket.violated ? 'text-danger' : ticket.slaRemaining < 600 ? 'text-warning' : ''}>
-                  {formatTime(ticket.slaRemaining)}
-                </td>
-                <td>
-                  {ticket.violated ? (
-                    <span className="status-badge violated">
-                      <i className="fas fa-times-circle"></i> Verstoßen
-                    </span>
-                  ) : ticket.slaRemaining < 600 ? (
-                    <span className="status-badge warning">
-                      <i className="fas fa-exclamation-circle"></i> Kritisch
-                    </span>
-                  ) : (
-                    <span className="status-badge ok">
-                      <i className="fas fa-check-circle"></i> OK
-                    </span>
-                  )}
-                </td>
+      <div className="sla-section">
+        <h2>Tägliche Übersicht</h2>
+        <div className="sla-table-container">
+          <table className="sla-table">
+            <thead>
+              <tr>
+                <th>Datum</th>
+                <th>Gesamt</th>
+                <th>Verstöße</th>
+                <th>Compliance</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {(slaData.daily || []).map((day) => (
+                <tr key={day.date}>
+                  <td>{day.date}</td>
+                  <td>{day.total}</td>
+                  <td className={day.breached > 0 ? 'text-danger' : ''}>{day.breached}</td>
+                  <td>{day.total > 0 ? Math.round(((day.total - day.breached) / day.total) * 100) : 100}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {slaData.length === 0 && (
+      {slaData.total === 0 && (
         <div className="empty-state">
           <i className="fas fa-check-double"></i>
           <p>Keine aktiven Tickets</p>
