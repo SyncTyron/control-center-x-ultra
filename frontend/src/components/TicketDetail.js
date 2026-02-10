@@ -35,7 +35,7 @@ function TicketDetail({ user }) {
     setUpdating(true);
     try {
       const token = localStorage.getItem('armesa_token');
-      await axios.patch(`${API_URL}/api/tickets/${ticketId}`, updates, {
+      await axios.put(`${API_URL}/api/tickets/${ticketId}/notes`, updates, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchTicket();
