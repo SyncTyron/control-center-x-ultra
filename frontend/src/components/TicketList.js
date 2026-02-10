@@ -29,7 +29,7 @@ function TicketList({ user }) {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setTickets(response.data);
+      setTickets(response.data.tickets || []);
     } catch (error) {
       console.error('Error fetching tickets:', error);
     } finally {
