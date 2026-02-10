@@ -583,7 +583,12 @@ async def startup():
                 "role": "admin",
             "created_at": datetime.now(timezone.utc).isoformat()
         })
-        logger.info("Default admin user created (admin/admin123)")
+            logger.info("Default admin user created (admin/admin123)")
+        except Exception as e:
+            # Ignore duplicate key error (race condition with multiple workers)
+            if "duplicate key" not in str(e).lower():
+                logger.error(f"Error creating admin user: {e}")
+                raise
 
     # Seed demo tickets if empty
     count = await db.tickets.count_documents({})
