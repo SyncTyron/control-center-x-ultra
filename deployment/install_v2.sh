@@ -127,6 +127,7 @@ apt install -y -qq \
     apt-transport-https \
     ca-certificates \
     net-tools \
+    dnsutils \
     htop
 
 log_step "[3/13] Installiere MongoDB 7.0..."
