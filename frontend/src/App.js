@@ -69,6 +69,9 @@ function App() {
                 <Route path="/tickets/:ticketId" element={<TicketDetail user={user} />} />
                 <Route path="/analytics" element={<Analytics user={user} />} />
                 <Route path="/support" element={<SupportStats user={user} />} />
+                <Route path="/settings" element={<Settings user={user} />} />
+                <Route path="/users" element={<UserManagement user={user} />} />
+                <Route path="/live" element={<LiveChat user={user} />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>
