@@ -49,7 +49,7 @@ function TicketDetail({ user }) {
 
   const addNote = async () => {
     if (!newNote.trim()) return;
-    await updateTicket({ note: newNote });
+    await updateTicket({ notes: newNote });
     setNewNote('');
   };
 
