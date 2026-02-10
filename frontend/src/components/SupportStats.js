@@ -47,13 +47,13 @@ function SupportStats({ user }) {
 
       <div className="stats-grid">
         {stats.map((supporter, index) => (
-          <div key={supporter.supporterId} className="supporter-card" data-testid={`supporter-${supporter.supporterId}`}>
+          <div key={supporter.supporter || index} className="supporter-card" data-testid={`supporter-${supporter.supporter}`}>
             <div className="supporter-header">
               <div className="supporter-avatar">
-                {supporter.supporterName[0]?.toUpperCase() || 'S'}
+                {supporter.supporter?.[0]?.toUpperCase() || 'S'}
               </div>
               <div className="supporter-info">
-                <h3>{supporter.supporterName}</h3>
+                <h3>{supporter.supporter}</h3>
                 <span className="supporter-rank">#{index + 1} Supporter</span>
               </div>
             </div>
@@ -64,28 +64,28 @@ function SupportStats({ user }) {
                   <i className="fas fa-ticket-alt"></i>
                 </div>
                 <div className="metric-content">
-                  <div className="metric-value">{supporter.ticketsClosed}</div>
+                  <div className="metric-value">{supporter.closed_tickets || 0}</div>
                   <div className="metric-label">Tickets geschlossen</div>
                 </div>
               </div>
 
               <div className="metric">
                 <div className="metric-icon green">
-                  <i className="fas fa-clock"></i>
+                  <i className="fas fa-tasks"></i>
                 </div>
                 <div className="metric-content">
-                  <div className="metric-value">{Math.round(supporter.avgResponseTime / 60)}m</div>
-                  <div className="metric-label">Ø Antwortzeit</div>
+                  <div className="metric-value">{supporter.total_tickets || 0}</div>
+                  <div className="metric-label">Gesamt bearbeitet</div>
                 </div>
               </div>
 
               <div className="metric">
                 <div className="metric-icon purple">
-                  <i className="fas fa-hourglass-half"></i>
+                  <i className="fas fa-arrow-up"></i>
                 </div>
                 <div className="metric-content">
-                  <div className="metric-value">{formatTime(supporter.avgResolutionTime)}</div>
-                  <div className="metric-label">Ø Lösungszeit</div>
+                  <div className="metric-value">{supporter.escalations || 0}</div>
+                  <div className="metric-label">Eskalationen</div>
                 </div>
               </div>
 
@@ -94,7 +94,7 @@ function SupportStats({ user }) {
                   <i className="fas fa-exclamation-triangle"></i>
                 </div>
                 <div className="metric-content">
-                  <div className="metric-value">{supporter.slaViolations}</div>
+                  <div className="metric-value">{supporter.sla_breaches || 0}</div>
                   <div className="metric-label">SLA Verstöße</div>
                 </div>
               </div>
@@ -107,8 +107,8 @@ function SupportStats({ user }) {
                   <div 
                     className="score-fill" 
                     style={{ 
-                      width: `${Math.max(0, Math.min(100, 100 - (supporter.slaViolations * 10)))}%`,
-                      background: supporter.slaViolations > 5 ? '#ef4444' : supporter.slaViolations > 2 ? '#f59e0b' : '#10b981'
+                      width: `${supporter.score || 0}%`,
+                      background: supporter.score < 50 ? '#ef4444' : supporter.score < 75 ? '#f59e0b' : '#10b981'
                     }}
                   ></div>
                 </div>
