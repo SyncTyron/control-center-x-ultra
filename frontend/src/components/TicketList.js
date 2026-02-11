@@ -123,6 +123,11 @@ function TicketList({ user }) {
               <div className="ticket-meta">
                 <span className={`badge badge-${ticket.status}`}>{(ticket.status || 'open').toUpperCase()}</span>
                 <span className="ticket-type">{ticket.type}</span>
+                {ticket.claimed_by && (
+                  <span className="claimed-by">
+                    <i className="fas fa-user"></i> {ticket.claimed_by}
+                  </span>
+                )}
               </div>
               <div className="ticket-date">{new Date(ticket.created_at).toLocaleDateString('de-DE')}</div>
             </div>
