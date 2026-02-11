@@ -94,6 +94,11 @@ function TicketDetail({ user }) {
               <div className="ticket-badges">
                 <span className={`badge badge-${ticket.priority || 'medium'}`}>{(ticket.priority || 'medium').toUpperCase()}</span>
                 <span className={`badge badge-${ticket.status || 'open'}`}>{(ticket.status || 'open').toUpperCase()}</span>
+                {ticket.claimed_by && (
+                  <span className="badge badge-info">
+                    <i className="fas fa-user"></i> {ticket.claimed_by}
+                  </span>
+                )}
                 {ticket.escalation_flag && <span className="badge badge-critical">ESKALIERT</span>}
               </div>
             </div>
