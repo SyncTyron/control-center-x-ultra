@@ -9,12 +9,16 @@ function TicketDetail({ user }) {
   const { ticketId } = useParams();
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newNote, setNewNote] = useState('');
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetchTicket();
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 5000); // Refresh every 5 seconds
+    return () => clearInterval(interval);
   }, [ticketId]);
 
   const fetchTicket = async () => {
@@ -28,6 +32,18 @@ function TicketDetail({ user }) {
       console.error('Error fetching ticket:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMessages = async () => {
+    try {
+      const token = localStorage.getItem('armesa_token');
+      const response = await axios.get(`${API_URL}/api/tickets/${ticketId}/messages`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMessages(response.data.messages || []);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
     }
   };
 
