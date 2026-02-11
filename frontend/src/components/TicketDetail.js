@@ -128,6 +128,47 @@ function TicketDetail({ user }) {
             </div>
           </div>
 
+          <div className="card live-chat-section">
+            <h3>
+              <i className="fas fa-comments"></i> Live Chat (Discord)
+            </h3>
+            
+            <div className="chat-messages">
+              {messages.length > 0 ? (
+                messages.map((msg, idx) => (
+                  <div key={idx} className="chat-message">
+                    <div className="message-header">
+                      <strong className="message-author">{msg.author}</strong>
+                      <span className="message-time">
+                        {new Date(msg.timestamp).toLocaleString('de-DE', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          day: '2-digit',
+                          month: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <div className="message-content">{msg.content}</div>
+                    {msg.attachments && msg.attachments.length > 0 && (
+                      <div className="message-attachments">
+                        {msg.attachments.map((att, i) => (
+                          <a key={i} href={att} target="_blank" rel="noopener noreferrer" className="attachment-link">
+                            <i className="fas fa-paperclip"></i> Anhang {i + 1}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="no-messages">
+                  <i className="fas fa-inbox"></i>
+                  <p>Keine Nachrichten vorhanden</p>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="card notes-section">
             <h3>Interne Notizen</h3>
             
