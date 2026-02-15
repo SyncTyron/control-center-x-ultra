@@ -229,6 +229,110 @@
   color: var(--text-muted);
 }
 
+/* Live Chat Styles */
+.live-chat-section {
+  padding: 24px;
+}
+
+.live-chat-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.live-chat-section h3 i {
+  color: var(--accent-primary);
+}
+
+.chat-messages {
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+}
+
+.chat-message {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.message-author {
+  color: var(--accent-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.message-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.message-content {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.message-attachments {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.attachment-link {
+  font-size: 12px;
+  color: var(--accent-primary);
+  text-decoration: none;
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.attachment-link:hover {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.no-messages {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.no-messages i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.no-messages p {
+  font-size: 14px;
+}
+
+.badge-info {
+  background: #3b82f6;
+  color: white;
+}
+
 .error {
   text-align: center;
   padding: 60px 20px;

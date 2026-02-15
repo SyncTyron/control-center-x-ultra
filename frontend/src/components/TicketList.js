@@ -29,7 +29,7 @@ function TicketList({ user }) {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setTickets(response.data);
+      setTickets(response.data.tickets || []);
     } catch (error) {
       console.error('Error fetching tickets:', error);
     } finally {
@@ -48,7 +48,7 @@ function TicketList({ user }) {
       const response = await axios.get(`${API_URL}/api/search?q=${filters.search}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setTickets(response.data);
+      setTickets(response.data.results || []);
     } catch (error) {
       console.error('Error searching:', error);
     }
@@ -109,22 +109,27 @@ function TicketList({ user }) {
       </div>
 
       <div className="tickets-grid">
-        {tickets.map((ticket) => (
-          <Link to={`/tickets/${ticket.ticketId}`} key={ticket.ticketId} className="ticket-card" data-testid={`ticket-${ticket.ticketId}`}>
+        {tickets && tickets.map((ticket) => (
+          <Link to={`/tickets/${ticket.id}`} key={ticket.id} className="ticket-card" data-testid={`ticket-${ticket.id}`}>
             <div className="ticket-card-header">
-              <span className="ticket-id">#{String(ticket.ticketId).padStart(4, '0')}</span>
-              <span className={`badge badge-${ticket.priority}`}>{ticket.priority.toUpperCase()}</span>
+              <span className="ticket-id">#{String(ticket.id).substring(0, 8)}</span>
+              <span className={`badge badge-${ticket.priority}`}>{(ticket.priority || 'medium').toUpperCase()}</span>
             </div>
             
             <h3 className="ticket-subject">{ticket.subject}</h3>
-            <p className="ticket-description">{ticket.description.substring(0, 100)}...</p>
+            <p className="ticket-description">{(ticket.description || '').substring(0, 100)}...</p>
             
             <div className="ticket-card-footer">
               <div className="ticket-meta">
-                <span className={`badge badge-${ticket.status}`}>{ticket.status.toUpperCase()}</span>
+                <span className={`badge badge-${ticket.status}`}>{(ticket.status || 'open').toUpperCase()}</span>
                 <span className="ticket-type">{ticket.type}</span>
+                {ticket.claimed_by && (
+                  <span className="claimed-by">
+                    <i className="fas fa-user"></i> {ticket.claimed_by}
+                  </span>
+                )}
               </div>
-              <div className="ticket-date">{new Date(ticket.createdAt).toLocaleDateString('de-DE')}</div>
+              <div className="ticket-date">{new Date(ticket.created_at).toLocaleDateString('de-DE')}</div>
             </div>
           </Link>
         ))}

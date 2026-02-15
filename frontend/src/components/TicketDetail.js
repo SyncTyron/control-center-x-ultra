@@ -9,12 +9,16 @@ function TicketDetail({ user }) {
   const { ticketId } = useParams();
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newNote, setNewNote] = useState('');
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetchTicket();
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 5000); // Refresh every 5 seconds
+    return () => clearInterval(interval);
   }, [ticketId]);
 
   const fetchTicket = async () => {
@@ -23,7 +27,7 @@ function TicketDetail({ user }) {
       const response = await axios.get(`${API_URL}/api/tickets/${ticketId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setTicket(response.data);
+      setTicket(response.data.ticket || response.data);
     } catch (error) {
       console.error('Error fetching ticket:', error);
     } finally {
@@ -31,11 +35,23 @@ function TicketDetail({ user }) {
     }
   };
 
+  const fetchMessages = async () => {
+    try {
+      const token = localStorage.getItem('armesa_token');
+      const response = await axios.get(`${API_URL}/api/tickets/${ticketId}/messages`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMessages(response.data.messages || []);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
   const updateTicket = async (updates) => {
     setUpdating(true);
     try {
       const token = localStorage.getItem('armesa_token');
-      await axios.patch(`${API_URL}/api/tickets/${ticketId}`, updates, {
+      await axios.put(`${API_URL}/api/tickets/${ticketId}/notes`, updates, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchTicket();
@@ -49,7 +65,7 @@ function TicketDetail({ user }) {
 
   const addNote = async () => {
     if (!newNote.trim()) return;
-    await updateTicket({ note: newNote });
+    await updateTicket({ notes: newNote });
     setNewNote('');
   };
 
@@ -67,7 +83,7 @@ function TicketDetail({ user }) {
         <button onClick={() => navigate('/tickets')} className="btn btn-secondary">
           <i className="fas fa-arrow-left"></i> Zurück
         </button>
-        <h1>Ticket #{String(ticket.ticketId).padStart(4, '0')}</h1>
+        <h1>Ticket #{ticket.id ? ticket.id.substring(0, 8) : 'N/A'}</h1>
       </div>
 
       <div className="detail-grid">
@@ -76,15 +92,20 @@ function TicketDetail({ user }) {
             <div className="ticket-info-header">
               <h2>{ticket.subject}</h2>
               <div className="ticket-badges">
-                <span className={`badge badge-${ticket.priority}`}>{ticket.priority.toUpperCase()}</span>
-                <span className={`badge badge-${ticket.status}`}>{ticket.status.toUpperCase()}</span>
-                {ticket.escalated && <span className="badge badge-critical">ESKALIERT</span>}
+                <span className={`badge badge-${ticket.priority || 'medium'}`}>{(ticket.priority || 'medium').toUpperCase()}</span>
+                <span className={`badge badge-${ticket.status || 'open'}`}>{(ticket.status || 'open').toUpperCase()}</span>
+                {ticket.claimed_by && (
+                  <span className="badge badge-info">
+                    <i className="fas fa-user"></i> {ticket.claimed_by}
+                  </span>
+                )}
+                {ticket.escalation_flag && <span className="badge badge-critical">ESKALIERT</span>}
               </div>
             </div>
 
             <div className="ticket-description">
               <h3>Beschreibung</h3>
-              <p>{ticket.description}</p>
+              <p>{ticket.description || 'Keine Beschreibung'}</p>
             </div>
 
             <div className="ticket-metadata">
@@ -94,32 +115,69 @@ function TicketDetail({ user }) {
               </div>
               <div className="meta-item">
                 <i className="fas fa-globe"></i>
-                <span>Sprache: {ticket.lang.toUpperCase()}</span>
+                <span>Sprache: {(ticket.lang || 'de').toUpperCase()}</span>
               </div>
               <div className="meta-item">
                 <i className="fas fa-user"></i>
-                <span>Ersteller: {ticket.userName}</span>
+                <span>Ersteller: {ticket.username}</span>
               </div>
               <div className="meta-item">
                 <i className="fas fa-calendar"></i>
-                <span>Erstellt: {new Date(ticket.createdAt).toLocaleString('de-DE')}</span>
+                <span>Erstellt: {ticket.created_at ? new Date(ticket.created_at).toLocaleString('de-DE') : 'N/A'}</span>
               </div>
             </div>
           </div>
 
-          <div className="card notes-section">
-            <h3>Notizen ({ticket.notes?.length || 0})</h3>
+          <div className="card live-chat-section">
+            <h3>
+              <i className="fas fa-comments"></i> Live Chat (Discord)
+            </h3>
             
-            <div className="notes-list">
-              {ticket.notes?.map((note, index) => (
-                <div key={index} className="note-item">
-                  <div className="note-header">
-                    <strong>{note.authorName || note.author}</strong>
-                    <span className="note-date">{new Date(note.timestamp).toLocaleString('de-DE')}</span>
+            <div className="chat-messages">
+              {messages.length > 0 ? (
+                messages.map((msg, idx) => (
+                  <div key={idx} className="chat-message">
+                    <div className="message-header">
+                      <strong className="message-author">{msg.author}</strong>
+                      <span className="message-time">
+                        {new Date(msg.timestamp).toLocaleString('de-DE', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          day: '2-digit',
+                          month: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <div className="message-content">{msg.content}</div>
+                    {msg.attachments && msg.attachments.length > 0 && (
+                      <div className="message-attachments">
+                        {msg.attachments.map((att, i) => (
+                          <a key={i} href={att} target="_blank" rel="noopener noreferrer" className="attachment-link">
+                            <i className="fas fa-paperclip"></i> Anhang {i + 1}
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <p>{note.content}</p>
+                ))
+              ) : (
+                <div className="no-messages">
+                  <i className="fas fa-inbox"></i>
+                  <p>Keine Nachrichten vorhanden</p>
                 </div>
-              ))}
+              )}
+            </div>
+          </div>
+
+          <div className="card notes-section">
+            <h3>Interne Notizen</h3>
+            
+            <div className="notes-content">
+              {ticket.notes ? (
+                <p className="current-notes">{ticket.notes}</p>
+              ) : (
+                <p className="no-notes">Keine Notizen vorhanden</p>
+              )}
             </div>
 
             {user.role !== 'viewer' && (
@@ -127,12 +185,12 @@ function TicketDetail({ user }) {
                 <textarea
                   value={newNote}
                   onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Neue Notiz hinzufügen..."
+                  placeholder="Notiz hinzufügen oder aktualisieren..."
                   rows="3"
                   data-testid="note-input"
                 />
                 <button onClick={addNote} className="btn btn-primary" disabled={updating}>
-                  <i className="fas fa-plus"></i> Notiz hinzufügen
+                  <i className="fas fa-save"></i> Notiz speichern
                 </button>
               </div>
             )}
@@ -147,7 +205,7 @@ function TicketDetail({ user }) {
               <div className="action-group">
                 <label>Status ändern</label>
                 <select
-                  value={ticket.status}
+                  value={ticket.status || 'open'}
                   onChange={(e) => updateTicket({ status: e.target.value })}
                   disabled={updating}
                   data-testid="status-select"
@@ -161,7 +219,7 @@ function TicketDetail({ user }) {
               <div className="action-group">
                 <label>Priorität ändern</label>
                 <select
-                  value={ticket.priority}
+                  value={ticket.priority || 'medium'}
                   onChange={(e) => updateTicket({ priority: e.target.value })}
                   disabled={updating}
                   data-testid="priority-select"
@@ -182,33 +240,33 @@ function TicketDetail({ user }) {
                 <i className="fas fa-plus-circle"></i>
                 <div>
                   <strong>Erstellt</strong>
-                  <span>{new Date(ticket.createdAt).toLocaleString('de-DE')}</span>
+                  <span>{ticket.created_at ? new Date(ticket.created_at).toLocaleString('de-DE') : 'N/A'}</span>
                 </div>
               </div>
-              {ticket.claimedAt && (
+              {ticket.claimed_at && (
                 <div className="timeline-item">
                   <i className="fas fa-hand-paper"></i>
                   <div>
-                    <strong>Claimed</strong>
-                    <span>{new Date(ticket.claimedAt).toLocaleString('de-DE')}</span>
+                    <strong>Übernommen von {ticket.claimed_by}</strong>
+                    <span>{new Date(ticket.claimed_at).toLocaleString('de-DE')}</span>
                   </div>
                 </div>
               )}
-              {ticket.firstResponseAt && (
+              {ticket.first_response_at && (
                 <div className="timeline-item">
                   <i className="fas fa-reply"></i>
                   <div>
                     <strong>Erste Antwort</strong>
-                    <span>{new Date(ticket.firstResponseAt).toLocaleString('de-DE')}</span>
+                    <span>{new Date(ticket.first_response_at).toLocaleString('de-DE')}</span>
                   </div>
                 </div>
               )}
-              {ticket.closedAt && (
+              {ticket.closed_at && (
                 <div className="timeline-item">
                   <i className="fas fa-check-circle"></i>
                   <div>
-                    <strong>Geschlossen</strong>
-                    <span>{new Date(ticket.closedAt).toLocaleString('de-DE')}</span>
+                    <strong>Geschlossen von {ticket.closed_by}</strong>
+                    <span>{new Date(ticket.closed_at).toLocaleString('de-DE')}</span>
                   </div>
                 </div>
               )}

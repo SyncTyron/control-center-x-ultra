@@ -6,6 +6,9 @@ import TicketList from './components/TicketList';
 import TicketDetail from './components/TicketDetail';
 import Analytics from './components/Analytics';
 import SupportStats from './components/SupportStats';
+import Settings from './components/Settings';
+import UserManagement from './components/UserManagement';
+import LiveChat from './components/LiveChat';
 import Sidebar from './components/Sidebar';
 import './App.css';
 
@@ -66,6 +69,9 @@ function App() {
                 <Route path="/tickets/:ticketId" element={<TicketDetail user={user} />} />
                 <Route path="/analytics" element={<Analytics user={user} />} />
                 <Route path="/support" element={<SupportStats user={user} />} />
+                <Route path="/settings" element={<Settings user={user} />} />
+                <Route path="/users" element={<UserManagement user={user} />} />
+                <Route path="/live" element={<LiveChat user={user} />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>

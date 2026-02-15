@@ -39,7 +39,7 @@ WEB_DIR="$INSTALL_DIR/web"
 VENV_DIR="$INSTALL_DIR/venv"
 WEB_PORT="${WEB_PORT:-8001}"
 DB_NAME="${DB_NAME:-ccx_ultra}"
-ADMIN_EMAIL="${ADMIN_EMAIL:-admin@armesa.de}"
+ADMIN_EMAIL="${ADMIN_EMAIL:-service.armesa@gmail.com}"
 
 # Discord IDs (werden später konfiguriert)
 DISCORD_GUILD_ID="${DISCORD_GUILD_ID:-YOUR_GUILD_ID}"
